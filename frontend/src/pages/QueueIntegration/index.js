@@ -20,13 +20,10 @@ import {
   TableHead,
   TableRow,
   TextField,
-  Tooltip
+  Tooltip,
 } from "@material-ui/core";
 
-import {
-  DeleteOutline,
-  Edit
-} from "@material-ui/icons";
+import { DeleteOutline, Edit } from "@material-ui/icons";
 
 import SearchIcon from "@material-ui/icons/Search";
 
@@ -64,7 +61,9 @@ const reducer = (state, action) => {
 
   if (action.type === "UPDATE_INTEGRATIONS") {
     const queueIntegration = action.payload;
-    const integrationIndex = state.findIndex((u) => u.id === queueIntegration.id);
+    const integrationIndex = state.findIndex(
+      (u) => u.id === queueIntegration.id
+    );
 
     if (integrationIndex !== -1) {
       state[integrationIndex] = queueIntegration;
@@ -100,7 +99,7 @@ const useStyles = makeStyles((theme) => ({
   avatar: {
     width: "140px",
     height: "40px",
-    borderRadius: 4
+    borderRadius: 4,
   },
 }));
 
@@ -127,9 +126,11 @@ const QueueIntegration = () => {
     async function fetchData() {
       const planConfigs = await getPlanCompany(undefined, companyId);
       if (!planConfigs.plan.useIntegrations) {
-        toast.error("Esta empresa não possui permissão para acessar essa página! Estamos lhe redirecionando.");
+        toast.error(
+          "Esta empresa não possui permissão para acessar essa página! Estamos lhe redirecionando."
+        );
         setTimeout(() => {
-          history.push(`/`)
+          history.push(`/`);
         }, 1000);
       }
     }
@@ -150,7 +151,10 @@ const QueueIntegration = () => {
           const { data } = await api.get("/queueIntegration/", {
             params: { searchParam, pageNumber },
           });
-          dispatch({ type: "LOAD_INTEGRATIONS", payload: data.queueIntegrations });
+          dispatch({
+            type: "LOAD_INTEGRATIONS",
+            payload: data.queueIntegrations,
+          });
           setHasMore(data.hasMore);
           setLoading(false);
         } catch (err) {
@@ -168,7 +172,10 @@ const QueueIntegration = () => {
 
     socket.on(`company-${companyId}-queueIntegration`, (data) => {
       if (data.action === "update" || data.action === "create") {
-        dispatch({ type: "UPDATE_INTEGRATIONS", payload: data.queueIntegration });
+        dispatch({
+          type: "UPDATE_INTEGRATIONS",
+          payload: data.queueIntegration,
+        });
       }
 
       if (data.action === "delete") {
@@ -229,7 +236,8 @@ const QueueIntegration = () => {
       <ConfirmationModal
         title={
           deletingUser &&
-          `${i18n.t("queueIntegration.confirmationModal.deleteTitle")} ${deletingUser.name
+          `${i18n.t("queueIntegration.confirmationModal.deleteTitle")} ${
+            deletingUser.name
           }?`
         }
         open={confirmModalOpen}
@@ -245,7 +253,9 @@ const QueueIntegration = () => {
         integrationId={selectedIntegration && selectedIntegration.id}
       />
       <MainHeader>
-        <Title>{i18n.t("queueIntegration.title")} ({queueIntegration.length})</Title>
+        <Title>
+          {i18n.t("queueIntegration.title")} ({queueIntegration.length})
+        </Title>
         <MainHeaderButtonsWrapper>
           <TextField
             placeholder={i18n.t("queueIntegration.searchPlaceholder")}
@@ -255,7 +265,7 @@ const QueueIntegration = () => {
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
-                  <SearchIcon color="secondary" />
+                  <SearchIcon color="primary" />
                 </InputAdornment>
               ),
             }}
@@ -278,23 +288,31 @@ const QueueIntegration = () => {
           <TableHead>
             <TableRow>
               <TableCell padding="checkbox"></TableCell>
-              <TableCell align="center">{i18n.t("queueIntegration.table.id")}</TableCell>
-              <TableCell align="center">{i18n.t("queueIntegration.table.name")}</TableCell>
+              <TableCell align="center">
+                {i18n.t("queueIntegration.table.id")}
+              </TableCell>
+              <TableCell align="center">
+                {i18n.t("queueIntegration.table.name")}
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             <>
               {queueIntegration.map((integration) => (
                 <TableRow key={integration.id}>
-                  <TableCell >
-                    {integration.type === "dialogflow" && (<Avatar 
-                      src={dialogflow} className={classes.avatar} />)}
-                    {integration.type === "n8n" && (<Avatar
-                      src={n8n} className={classes.avatar} />)}
-                    {integration.type === "webhook" && (<Avatar
-                      src={webhooks} className={classes.avatar} />)}
-                    {integration.type === "typebot" && (<Avatar
-                      src={typebot} className={classes.avatar} />)}
+                  <TableCell>
+                    {integration.type === "dialogflow" && (
+                      <Avatar src={dialogflow} className={classes.avatar} />
+                    )}
+                    {integration.type === "n8n" && (
+                      <Avatar src={n8n} className={classes.avatar} />
+                    )}
+                    {integration.type === "webhook" && (
+                      <Avatar src={webhooks} className={classes.avatar} />
+                    )}
+                    {integration.type === "typebot" && (
+                      <Avatar src={typebot} className={classes.avatar} />
+                    )}
                   </TableCell>
 
                   <TableCell align="center">{integration.id}</TableCell>
